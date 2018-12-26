@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style id="subs_style">
+        ::cue {
+            /*http://www.w3.org/TR/2011/WD-html5-20110525/rendering.html#the-::cue-pseudo-element*/
+            color: #FFF;
+            background: transparent;
+            font-size: 1em;
+            /*font-family: "Comic Sans MS";*/
+            /*text-shadow: 0 0 0.5em #000;*/
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+    </style>
+    <link rel="stylesheet" href="../css/icons/style.css">
+    <link rel="stylesheet" href="../css/loader.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <script src="../js/cast_sender.js"></script>
+    <script src="../js/libs/jquery.min.js"></script>
+    <script src="../js/libs/jquery.nicescroll.min.js"></script>
+    <script src="../js/bundle.ts.js"></script>
+    <script src="../js/bundle2.js"></script>
+    <script src="../js/background.js"></script>
+    <script src="../js/http.js"></script>
+    <script src="../js/cast.js"></script>
+    <script src="../js/subs.js"></script>
+    <script src="../js/controls.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/window.js"></script>
+</head>
+<body>
+
+<div id="background">
+    <table>
+        <tr>
+            <td pnum="0"><img/></td>
+            <td pnum="1"><img/></td>
+            <td pnum="2"><img/></td>
+        </tr>
+        <tr>
+            <td pnum="3"><img/></td>
+            <td pnum="4"><img/></td>
+            <td pnum="5"><img/></td>
+        </tr>
+    </table>
+</div>
+
+<div id="frame">
+    <div id="caption">
+        <div id="window_buttons">
+            <div class="button" id="btn-always_on_top"><div class="icon icon-pushpin" title="Toggle always on top"></div></div><!--
+            --><div class="button" id="btn-minimize">&#9598;</div><!--
+            --><div class="button" id="btn-maximize">&#9633;</div><!--
+            --><div class="button" id="btn-close">&#10005;</div>
+        </div>
+        <div id="window_title"></div>
+    </div>
+    <div id="logo"></div>
+    <div id="main_area">
+        <div id="welcome">
+            <input type="text" name="magnet_url" placeholder="PASTE A MAGNET LINK URL HERE"/>
+            <div id="manual_video_file_button"><span class="icon-upload"></span> Or play a file from disk...</div>
+            <input type="file" name="manual_video_file" accept=".mp4,.mkv,.torrent" style="display:none;"/>
+            <a id="launcher_link" href="https://chrome.google.com/webstore/detail/bit-player-launcher/andfnelfgfdifognepabogfledhdijhn" target="_blank">
+                <img src="../images/launcher_photo.png"/>
+                Install the Bit-Player Launcher extension
+            </a>
+            <p id="cast_beta_text" style="display: none">
+                <span class="icon-google127"></span> Chrome Cast support is now available as a BETA feature.<br/>
+                <span class="note">Make sure that port 43245 is open in your firewall.</span>
+            </p>
+        </div>
+
+        <div id="loader" style="display:none;">
+            <div>
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+                <div id="load_status">Please wait...</div>
+                <div class="download_status"></div>
+                <br/>
+                <label>
+                    <input type="checkbox" name="auto_start"/> Start video once ready
+                </label>
+            </div>
+        </div>
+
+        <div id="help_link"><a href="https://github.com/roeycohen/Bit-Player-Chrome-Extension" target="_blank">Developer? I'll be glad for some help :)</a></div>
+
+        <div id="player" style="display:none;">
+            <video id="video" controls></video>
+            <div id="casting_bg"></div>
+
+            <div id="controls">
+
+                <div id="time_bar">
+                    <div id="bg"></div>
+                    <div id="goto"></div>
+                    <div id="percentage">
+                        <div></div>
+                    </div>
+                </div>
+
+                <div id="left_controls">
+                    <div class="button" id="btn_play_pause" title="Play/Pause"><span class="icon-play3"></span></div>
+                    <div class="meta" id="time">00:00 / 00:00</div>
+                    &nbsp;
+                    <div class="button" id="btn_mute" title="Mute"><span class="icon-volume-medium"></span></div>
+                    <input id="volume_bar" type="range" min="0" max="1" step="0.01"/>
+                </div>
+
+                <div id="right_controls">
+                    <div class="button" id="btn_cast" title="Cast..." style="display: none;"><span class="icon-google127"></span></div>
+                    <div class="button" id="btn_minus" title="Decrease subtitles size"><span class="icon-minus"></span>
+                    </div>
+                    <div class="button" id="btn_plus" title="Increase subtitles size"><span class="icon-plus"></span>
+                    </div>
+                    <div class="button" id="btn_sub_select">
+                        <span class="icon-bubble"></span>
+                        <ul class="context_menu">
+                            <li class="active"><i>Off</i></li>
+                            <li class="lang_select_menu">
+                                Select language...
+                                <table class="context_menu" id="lang_select_table">
+                                    <tbody></tbody>
+                                </table>
+                            </li>
+                            <li class="manual">From file...</li>
+                            <div id="available_subs"></div>
+                        </ul>
+                        <input type="file" name='manual_subtitles_file' accept=".srt" style="display:none;"/>
+                    </div>
+                    <div class="button" id="btn_full_screen" title="Toggle full screen">
+                        <span class="icon-enlarge2"></span></div>
+                </div>
+
+            </div>
+
+            <div id="status">
+                <span class="download_status"></span>&nbsp;&nbsp;<a target="_blank" target="Save file to disk"><span class="icon-floppy-disk"></span></a>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>
